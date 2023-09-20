@@ -15,7 +15,6 @@ from itertools import product
 from tabular_df import load_airbnb
 
 
-# df = pd.read_csv("C:/Users/Sofaglobe/Desktop/AiCore_Projects/Modelling Airbnb's property listing dataset/airbnb-property-listings/tabular_data/Cleaned_AirBnbData.csv")
 df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData.csv")
 
 np.random.seed(2)
