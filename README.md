@@ -7,3 +7,6 @@ For the tabular data I used the pandas python package to transfer the data from 
 
 ## Milestone 4
 This script performs a grid-search to tune the hyperparameters of five machine-learning models as provided by SKLearn. Specifically, LinearRegression, SGDRegressor, DecisionTreeRegressor, GradientBoostingRegressor and RandomForestRegressor. It also compares all five models to each other and determines the best one.
+
+## Milestone 5
+This script functions similiarly to the regression version, but this time the machine learning task is to predict the 'Category' of the AirBnB.
