@@ -20,6 +20,7 @@ from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
 df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData.csv")
+ 
 
 class AirbnbNightlyPriceRegressionDataset(Dataset):
     def __init__(self, features, label):
@@ -28,13 +29,21 @@ class AirbnbNightlyPriceRegressionDataset(Dataset):
         # self.prices = torch.tensor(prices, dtype=torch.float32)
         self.features, self.label = load_airbnb(df, 'Price_Night')
         self.features = self.features.select_dtypes(include=["int64", "float64"])
+        scaler = StandardScaler()
+        # self.features = torch.tensor(scaler.fit_transform(self.features), dtype=torch.float32)
+        self.features = torch.tensor(scaler.fit_transform(self.features), dtype=torch.float64)
+
+    # def __getitem__(self, idx):
+    #     # return torch.tensor(self.features.iloc[idx]).float(), torch.tensor(self.label.iloc[idx]).float()
+    #     features = self.features.iloc[idx]
+    #     features = torch.tensor(features).float()
+    #     label = self.label.iloc[idx]
+    #     label = torch.tensor(label).float()
+    #     return features, label
 
     def __getitem__(self, idx):
-        # return torch.tensor(self.features.iloc[idx]).float(), torch.tensor(self.label.iloc[idx]).float()
-        features = self.features.iloc[idx]
-        features = torch.tensor(features).float()
-        label = self.label.iloc[idx]
-        label = torch.tensor(label).float()
+        features = self.features[idx]
+        label = torch.tensor(self.label.iloc[idx]).float()
         return features, label
         
     def __len__(self):
@@ -65,6 +74,7 @@ class TabularNN(nn.Module):
         self.fc1 = nn.Linear(input_size, configs['hidden_layer_width'])
         self.bn1 = nn.BatchNorm1d(input_size)
         self.relu = nn.ReLU()
+        self.m = nn.Dropout(p=0.2)
         self.fc2 = nn.Linear(configs['hidden_layer_width'], output_size)
         self.optimizer = getattr(optim, configs['optimizer'])(self.parameters(), lr=configs['learning_rate'])
         
@@ -84,14 +94,14 @@ output_size = 1
 def generate_nn_configs():
     configs = []
 
-    # hidden_layer_widths = [32, 64, 128]
-    # depths = [2, 3, 4]
-    # learning_rates = [0.001, 0.01, 0.1]
-    # optimizers = ['Adadelta', 'SGD', 'Adam', 'Adagrad']
-    hidden_layer_widths = [32]
-    depths = [2]
+    hidden_layer_widths = [32, 64, 128]
+    depths = [2, 3, 4]
     learning_rates = [0.001, 0.01, 0.1]
-    optimizers = ['SGD', 'Adam']
+    optimizers = ['Adadelta', 'SGD', 'Adam', 'Adagrad']
+    # hidden_layer_widths = [32]
+    # depths = [2]
+    # learning_rates = [0.001, 0.01, 0.1]
+    # optimizers = ['SGD', 'Adam']
 
     for config in itertools.product(hidden_layer_widths, depths, learning_rates, optimizers):
         print(config)
