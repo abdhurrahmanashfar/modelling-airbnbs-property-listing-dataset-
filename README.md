@@ -10,3 +10,6 @@ This script performs a grid-search to tune the hyperparameters of five machine-l
 
 ## Milestone 5
 This script functions similiarly to the regression version, but this time the machine learning task is to predict the 'Category' of the AirBnB.
+
+## Milestone 6
+This script performs a grid-search to tune the hyperparameters of a neural-network created with PyTorch. The hyperparameters include the width and depth of the neural-network. The grid-search takes in the hyperparameters to test from a YAML file.
