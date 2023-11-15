@@ -19,8 +19,9 @@ from tabular_df import load_airbnb
 from sklearn.preprocessing import StandardScaler
 
 np.random.seed(42)
+torch.manual_seed(2)
 df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData.csv")
- 
+
 
 class AirbnbNightlyPriceRegressionDataset(Dataset):
     def __init__(self, features, label):
@@ -29,21 +30,14 @@ class AirbnbNightlyPriceRegressionDataset(Dataset):
         # self.prices = torch.tensor(prices, dtype=torch.float32)
         self.features, self.label = load_airbnb(df, 'Price_Night')
         self.features = self.features.select_dtypes(include=["int64", "float64"])
-        scaler = StandardScaler()
-        # self.features = torch.tensor(scaler.fit_transform(self.features), dtype=torch.float32)
-        self.features = torch.tensor(scaler.fit_transform(self.features), dtype=torch.float64)
 
-    # def __getitem__(self, idx):
-    #     # return torch.tensor(self.features.iloc[idx]).float(), torch.tensor(self.label.iloc[idx]).float()
-    #     features = self.features.iloc[idx]
-    #     features = torch.tensor(features).float()
-    #     label = self.label.iloc[idx]
-    #     label = torch.tensor(label).float()
-    #     return features, label
 
     def __getitem__(self, idx):
-        features = self.features[idx]
-        label = torch.tensor(self.label.iloc[idx]).float()
+        # return torch.tensor(self.features.iloc[idx]).float(), torch.tensor(self.label.iloc[idx]).float()
+        features = self.features.iloc[idx]
+        features = torch.tensor(features).float()
+        label = self.label.iloc[idx]
+        label = torch.tensor(label).float()
         return features, label
         
     def __len__(self):
@@ -70,23 +64,39 @@ test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
 
 class TabularNN(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, configs):
-        super(TabularNN, self).__init__()
-        self.fc1 = nn.Linear(input_size, configs['hidden_layer_width'])
-        self.bn1 = nn.BatchNorm1d(input_size)
-        self.relu = nn.ReLU()
-        self.m = nn.Dropout(p=0.2)
-        self.fc2 = nn.Linear(configs['hidden_layer_width'], output_size)
-        self.optimizer = getattr(optim, configs['optimizer'])(self.parameters(), lr=configs['learning_rate'])
-        
-    def forward(self, x):
-        out = self.fc1(x)
-        out = self.relu(out)
-        out = self.fc2(out)
-        return out
+        # super(TabularNN, self).__init__()
+        super().__init__()
+        # self.fc1 = nn.Linear(input_size, configs['hidden_layer_width'])
+        # self.bn1 = nn.BatchNorm1d(input_size)
+        # self.relu = nn.ReLU()
+        # self.m = nn.Dropout(p=0.2)
+        # self.n = nn.Sequential()
+        # self.fc2 = nn.Linear(configs['hidden_layer_width'], output_size)
+        # self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
 
+        layers = []
+        layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
+        layers.append(nn.BatchNorm1d(input_size))
+        layers.append(nn.ReLU())
+        layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
+        layers.append(nn.Linear(configs['hidden_layer_width'], output_size))
+        self.layers = nn.Sequential(*layers)
+        self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
+      
+
+    def forward(self, x):
+        # out = self.fc1(x)
+        # out = self.relu(out)
+        # out = self.fc2(out)
+        # return out
+        # return self.layers(features)
+        x = self.layers(x)
+        return x
+    
 
 # output size (in regression tasks it's 1).
-input_size = 10
+# input_size = 10
+input_size = 32
 hidden_size = 64
 output_size = 1
 
@@ -97,19 +107,19 @@ def generate_nn_configs():
     hidden_layer_widths = [32, 64, 128]
     depths = [2, 3, 4]
     learning_rates = [0.001, 0.01, 0.1]
-    optimizers = ['Adadelta', 'SGD', 'Adam', 'Adagrad']
+    optimisers = ['Adadelta', 'SGD', 'Adam', 'Adagrad']
     # hidden_layer_widths = [32]
     # depths = [2]
     # learning_rates = [0.001, 0.01, 0.1]
-    # optimizers = ['SGD', 'Adam']
+    # optimisers = ['SGD', 'Adam']
 
-    for config in itertools.product(hidden_layer_widths, depths, learning_rates, optimizers):
+    for config in itertools.product(hidden_layer_widths, depths, learning_rates, optimisers):
         print(config)
         config_dict = {
             'hidden_layer_width': config[0],
             'depth': config[1],
             'learning_rate': config[2],
-            'optimizer': config[3]
+            'optimiser': config[3]
         }
         configs.append(config_dict)
 
@@ -145,16 +155,16 @@ def train(model, train_loader, val_loader, num_epochs):
         # Training phase
         model.train()
         running_loss = 0.0
-        for features, labels in train_loader:
+        for features, label in train_loader:
             time_b4_pred = time.time()
             prediction = model(features)
             time_after_pred = time.time()
             time_elapsed = time_after_pred - time_b4_pred
             pred_time.append(time_elapsed)
             print(prediction.shape)
-            loss = criterion(prediction, labels)
-            R2_train = r2_score(labels.detach().numpy(), prediction.detach().numpy())
-            # R2_train = R2_train(prediction, labels)
+            loss = criterion(prediction, label)
+            R2_train = r2_score(label.detach().numpy(), prediction.detach().numpy())
+            # R2_train = R2_train(prediction, label)
             RMSE_train = torch.sqrt(loss)
             loss.backward()
             print(loss.item())
@@ -170,12 +180,12 @@ def train(model, train_loader, val_loader, num_epochs):
         model.eval()
         val_loss = 0.0
         with torch.no_grad():
-            for features, labels in val_loader:
+            for features, label in val_loader:
                 prediction = model(features)
-                loss = criterion(prediction, labels)
+                loss = criterion(prediction, label)
                 val_loss += loss.item()
-                R2_val = r2_score(labels.detach().numpy(), prediction.detach().numpy())
-                # R2_val = R2_val(prediction, labels)
+                R2_val = r2_score(label.detach().numpy(), prediction.detach().numpy())
+                # R2_val = R2_val(prediction, label)
                 RMSE_val = torch.sqrt(loss)
         
         # Calculate average losses
@@ -240,7 +250,7 @@ def find_best_nn():
     best_metrics = None
     best_hyperparameters = None
     best_config = None
-    best_loss = float('inf')
+    best_loss = 10000
 
     configs = generate_nn_configs()
 
@@ -248,7 +258,11 @@ def find_best_nn():
         print(f"Training Model {i+1}...")
         model = TabularNN(input_size, hidden_size, output_size, config)
         
-        metrics = train(model, train_loader, validation_loader, num_epochs)
+        try:
+            metrics = train(model, train_loader, validation_loader, num_epochs)
+        except:
+            print(config)
+            break
 
         if metrics['val_loss'] < best_loss:
             best_model = model
@@ -266,7 +280,7 @@ def find_best_nn():
 
 if __name__ == "__main__":
     model, best_model, best_metrics, best_hyperparameters, best_config = find_best_nn()
-    optimiser = model.optimizer
+    # optimiser = model.optimizer
     metrics = train(model, train_loader, validation_loader, num_epochs)
     save_model(model, saved_configs, metrics, save_folder)
 
