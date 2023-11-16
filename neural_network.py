@@ -30,6 +30,8 @@ class AirbnbNightlyPriceRegressionDataset(Dataset):
         # self.prices = torch.tensor(prices, dtype=torch.float32)
         self.features, self.label = load_airbnb(df, 'Price_Night')
         self.features = self.features.select_dtypes(include=["int64", "float64"])
+        # scaler = StandardScaler()
+        # self.features = torch.tensor(scaler.fit_transform(self.features), dtype=torch.float64)
 
 
     def __getitem__(self, idx):
@@ -66,36 +68,38 @@ class TabularNN(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, configs):
         # super(TabularNN, self).__init__()
         super().__init__()
-        # self.fc1 = nn.Linear(input_size, configs['hidden_layer_width'])
-        # self.bn1 = nn.BatchNorm1d(input_size)
-        # self.relu = nn.ReLU()
-        # self.m = nn.Dropout(p=0.2)
-        # self.n = nn.Sequential()
-        # self.fc2 = nn.Linear(configs['hidden_layer_width'], output_size)
-        # self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
-
-        layers = []
-        layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
-        layers.append(nn.BatchNorm1d(input_size))
-        layers.append(nn.ReLU())
-        layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
-        layers.append(nn.Linear(configs['hidden_layer_width'], output_size))
-        self.layers = nn.Sequential(*layers)
+        self.fc1 = nn.Linear(input_size, configs['hidden_layer_width'])
+        self.bn1 = nn.BatchNorm1d(input_size)
+        self.relu = nn.ReLU()
+        self.m = nn.Dropout(p=0.2)
+        self.n = nn.Sequential()
+        self.fc2 = nn.Linear(configs['hidden_layer_width'], output_size)
         self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
+
+        # layers = []
+        # layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
+        # layers.append(nn.BatchNorm1d(input_size))
+        # layers.append(nn.ReLU())
+        # layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
+        # layers.append(nn.Linear(configs['hidden_layer_width'], output_size))
+        # self.layers = nn.Sequential(*layers)
+        # self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
       
 
     def forward(self, x):
-        # out = self.fc1(x)
-        # out = self.relu(out)
-        # out = self.fc2(out)
-        # return out
+        out = self.fc1(x)
+        out = self.relu(out)
+        out = self.fc2(out)
+        return out
         # return self.layers(features)
-        x = self.layers(x)
-        return x
+        # x = self.layers(x)
+        # return x
     
 
 # output size (in regression tasks it's 1).
 # input_size = 10
+# hidden_size = 64
+# output_size = 1
 input_size = 32
 hidden_size = 64
 output_size = 1
