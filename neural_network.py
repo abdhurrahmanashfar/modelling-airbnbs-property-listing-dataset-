@@ -45,8 +45,9 @@ class AirbnbNightlyPriceRegressionDataset(Dataset):
     def __len__(self):
         return len(self.features)
 
-features, label = load_airbnb(df, 'Price_Night')
-dataset = AirbnbNightlyPriceRegressionDataset(features, label)
+# features, label = load_airbnb(df, 'Price_Night')
+# del features["Unnamed: 0"]
+# dataset = AirbnbNightlyPriceRegressionDataset(features, label)
 
 
 def get_random_split(dataset):
@@ -57,52 +58,52 @@ def get_random_split(dataset):
 
 batch_size = 64
 
-train_set, validation_set, test_set = get_random_split(dataset)
-train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
-validation_loader = DataLoader(validation_set, batch_size=batch_size, shuffle=False)
-test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
-# data_loader = {"train": train_loader, "validation": validation_loader, "test": test_loader}
+# train_set, validation_set, test_set = get_random_split(dataset)
+# train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
+# validation_loader = DataLoader(validation_set, batch_size=batch_size, shuffle=False)
+# test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
+# # data_loader = {"train": train_loader, "validation": validation_loader, "test": test_loader}
 
 
 class TabularNN(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, configs):
         # super(TabularNN, self).__init__()
         super().__init__()
-        self.fc1 = nn.Linear(input_size, configs['hidden_layer_width'])
-        self.bn1 = nn.BatchNorm1d(input_size)
-        self.relu = nn.ReLU()
-        self.m = nn.Dropout(p=0.2)
-        self.n = nn.Sequential()
-        self.fc2 = nn.Linear(configs['hidden_layer_width'], output_size)
-        self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
-
-        # layers = []
-        # layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
-        # layers.append(nn.BatchNorm1d(input_size))
-        # layers.append(nn.ReLU())
-        # layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
-        # layers.append(nn.Linear(configs['hidden_layer_width'], output_size))
-        # self.layers = nn.Sequential(*layers)
+        # self.fc1 = nn.Linear(input_size, configs['hidden_layer_width'])
+        # self.bn1 = nn.BatchNorm1d(input_size)
+        # self.relu = nn.ReLU()
+        # self.m = nn.Dropout(p=0.2)
+        # self.n = nn.Sequential()
+        # self.fc2 = nn.Linear(configs['hidden_layer_width'], output_size)
         # self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
+
+        layers = []
+        layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
+        # layers.append(nn.BatchNorm1d(input_size))
+        layers.append(nn.ReLU())
+        layers.append(nn.Linear(configs['hidden_layer_width'], configs['hidden_layer_width']))
+        layers.append(nn.Linear(configs['hidden_layer_width'], output_size))
+        self.layers = nn.Sequential(*layers)
+        self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
       
 
     def forward(self, x):
-        out = self.fc1(x)
-        out = self.relu(out)
-        out = self.fc2(out)
-        return out
+        # out = self.fc1(x)
+        # out = self.relu(out)
+        # out = self.fc2(out)
+        # return out
         # return self.layers(features)
-        # x = self.layers(x)
-        # return x
+        x = self.layers(x)
+        return x
     
 
 # output size (in regression tasks it's 1).
 # input_size = 10
 # hidden_size = 64
 # output_size = 1
-input_size = 32
-hidden_size = 64
-output_size = 1
+# input_size = 10
+# hidden_size = 64
+# output_size = 1
 
 
 def generate_nn_configs():
@@ -130,12 +131,12 @@ def generate_nn_configs():
     return configs
 
 
-configs = generate_nn_configs()
+# configs = generate_nn_configs()
 
-file_path = 'nn_config.yaml'
+# file_path = 'nn_config.yaml'
 
-with open(file_path, 'w') as file:
-    yaml.dump(configs, file)
+# with open('nn_config.yaml', 'w') as file:
+#     yaml.dump(configs, file)
 
 
 def get_nn_config():
@@ -143,7 +144,7 @@ def get_nn_config():
         configs = yaml.safe_load(file)
     return configs
 
-saved_configs = get_nn_config()
+# saved_configs = get_nn_config()
 
 # model = TabularNN(input_size, hidden_size, output_size, saved_configs)
 
@@ -243,10 +244,10 @@ def save_model(model, hyperparameters, metrics, save_folder):
     with open(os.path.join(save_folder, "metrics.json"), "w") as f:
         json.dump(metrics, f)
 
-current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-save_folder = f"models/neural_networks/regression/{current_time}"
+# current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+# save_folder = f"models/neural_networks/regression/{current_time}"
 
-save_best_model_folder = "models/neural_networks/regression/best_model"
+# save_best_model_folder = "models/neural_networks/regression/best_model"
 
 
 def find_best_nn():
@@ -283,14 +284,48 @@ def find_best_nn():
 
 
 if __name__ == "__main__":
+    # model, best_model, best_metrics, best_hyperparameters, best_config = find_best_nn()
+    # # optimiser = model.optimizer
+    # metrics = train(model, train_loader, validation_loader, num_epochs)
+    # save_model(model, saved_configs, metrics, save_folder)
+    # print(f"Best Model Configuration: {best_config}")
+    # print(f"Best Metrics: {best_metrics}")
+    # print(f"Best Hyperparameters: {best_hyperparameters}")
+
+    features, label = load_airbnb(df, 'Price_Night')
+    del features["Unnamed: 0"]
+    dataset = AirbnbNightlyPriceRegressionDataset(features, label)
+
+    train_set, validation_set, test_set = get_random_split(dataset)
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
+    validation_loader = DataLoader(validation_set, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
+    # data_loader = {"train": train_loader, "validation": validation_loader, "test": test_loader}
+
+    input_size = 10
+    hidden_size = 64
+    output_size = 1
+
+    configs = generate_nn_configs()
+
+    with open('nn_config.yaml', 'w') as file:
+        yaml.dump(configs, file)
+
+    saved_configs = get_nn_config()
+
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    save_folder = f"models/neural_networks/regression/{current_time}"
+
+    save_best_model_folder = "models/neural_networks/regression/best_model"
+
     model, best_model, best_metrics, best_hyperparameters, best_config = find_best_nn()
     # optimiser = model.optimizer
     metrics = train(model, train_loader, validation_loader, num_epochs)
     save_model(model, saved_configs, metrics, save_folder)
-
     print(f"Best Model Configuration: {best_config}")
     print(f"Best Metrics: {best_metrics}")
     print(f"Best Hyperparameters: {best_hyperparameters}")
+
 
 
 
