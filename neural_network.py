@@ -22,17 +22,19 @@ np.random.seed(42)
 torch.manual_seed(2)
 df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData.csv")
 
-
 class AirbnbNightlyPriceRegressionDataset(Dataset):
     def __init__(self, features, label):
         super().__init__()
         # self.features = torch.tensor(features, dtype=torch.float32)
         # self.prices = torch.tensor(prices, dtype=torch.float32)
+        # scaler = StandardScaler()
+        # self.features = torch.tensor(scaler.fit_transform(self.features), dtype=torch.float32)
         self.features, self.label = load_airbnb(df, 'Price_Night')
         self.features = self.features.select_dtypes(include=["int64", "float64"])
-        # scaler = StandardScaler()
-        # self.features = torch.tensor(scaler.fit_transform(self.features), dtype=torch.float64)
-
+        scaler = StandardScaler()
+        # self.features = torch.tensor(scaler.fit_transform(self.features), dtype=torch.float32)
+        # self.features = scaler.fit_transform(self.features)
+        self.features = pd.DataFrame(scaler.fit_transform(self.features), columns=self.features.columns)
 
     def __getitem__(self, idx):
         # return torch.tensor(self.features.iloc[idx]).float(), torch.tensor(self.label.iloc[idx]).float()
@@ -48,6 +50,9 @@ class AirbnbNightlyPriceRegressionDataset(Dataset):
 # features, label = load_airbnb(df, 'Price_Night')
 # del features["Unnamed: 0"]
 # dataset = AirbnbNightlyPriceRegressionDataset(features, label)
+original_df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData_2.csv")
+df['bedrooms'] = original_df['bedrooms']
+print(df.isnull().sum())
 
 
 def get_random_split(dataset):
@@ -84,8 +89,9 @@ class TabularNN(nn.Module):
         layers.append(nn.Linear(configs['hidden_layer_width'], configs['hidden_layer_width']))
         layers.append(nn.Linear(configs['hidden_layer_width'], output_size))
         self.layers = nn.Sequential(*layers)
-        self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
-      
+        # self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
+        # self.optimiser = torch.optim.SGD(model.parameters(), configs['learning_rate'])
+        self.optimiser = torch.optim.SGD(self.parameters(), configs['learning_rate'])
 
     def forward(self, x):
         # out = self.fc1(x)
@@ -112,7 +118,8 @@ def generate_nn_configs():
     hidden_layer_widths = [32, 64, 128]
     depths = [2, 3, 4]
     learning_rates = [0.001, 0.01, 0.1]
-    optimisers = ['Adadelta', 'SGD', 'Adam', 'Adagrad']
+    # optimisers = ['Adadelta', 'SGD', 'Adam', 'Adagrad']
+    optimisers = ['SGD']
     # hidden_layer_widths = [32]
     # depths = [2]
     # learning_rates = [0.001, 0.01, 0.1]
@@ -152,15 +159,21 @@ def train(model, train_loader, val_loader, num_epochs):
     batch_idx = 0
     pred_time = []
     start_time = time.time()
-    optimiser = model.optimizer
+    optimiser = model.optimiser
     criterion = nn.MSELoss()
     writer = SummaryWriter()
-    
+
+    # optimiser_name = config['optimiser']
+    # learning_rate = config['learning_rate']
+
+    # optimiser = torch.optim.SGD(model.parameters(), lr=learning_rate)
+
     for epoch in range(num_epochs):
         # Training phase
         model.train()
         running_loss = 0.0
         for features, label in train_loader:
+            # label = torch.unsqueeze(label, 1)
             time_b4_pred = time.time()
             prediction = model(features)
             time_after_pred = time.time()
@@ -168,7 +181,10 @@ def train(model, train_loader, val_loader, num_epochs):
             pred_time.append(time_elapsed)
             print(prediction.shape)
             loss = criterion(prediction, label)
-            R2_train = r2_score(label.detach().numpy(), prediction.detach().numpy())
+            # prediction[torch.isnan(prediction)] = 1  # Replace NaN values with 1
+            # label[torch.isnan(label)] = 1  # Replace NaN values with 1
+            # R2_train = r2_score(label.detach().numpy(), prediction.detach().numpy())
+            R2_train = r2_score(prediction.detach().numpy(), label.detach().numpy())
             # R2_train = R2_train(prediction, label)
             RMSE_train = torch.sqrt(loss)
             loss.backward()
@@ -189,7 +205,8 @@ def train(model, train_loader, val_loader, num_epochs):
                 prediction = model(features)
                 loss = criterion(prediction, label)
                 val_loss += loss.item()
-                R2_val = r2_score(label.detach().numpy(), prediction.detach().numpy())
+                # R2_val = r2_score(label.detach().numpy(), prediction.detach().numpy())
+                R2_val = r2_score(prediction.detach().numpy(), label.detach().numpy())
                 # R2_val = R2_val(prediction, label)
                 RMSE_val = torch.sqrt(loss)
         
@@ -263,11 +280,11 @@ def find_best_nn():
         print(f"Training Model {i+1}...")
         model = TabularNN(input_size, hidden_size, output_size, config)
         
-        try:
-            metrics = train(model, train_loader, validation_loader, num_epochs)
-        except:
-            print(config)
-            break
+        # try:
+        metrics = train(model, train_loader, validation_loader, num_epochs)
+        # except:
+        #     print(config)
+        #     break
 
         if metrics['val_loss'] < best_loss:
             best_model = model
@@ -296,6 +313,9 @@ if __name__ == "__main__":
     del features["Unnamed: 0"]
     dataset = AirbnbNightlyPriceRegressionDataset(features, label)
 
+    # print(features.isnull().sum())
+    # print(label.isnull().sum())
+
     train_set, validation_set, test_set = get_random_split(dataset)
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
     validation_loader = DataLoader(validation_set, batch_size=batch_size, shuffle=False)
@@ -320,11 +340,15 @@ if __name__ == "__main__":
 
     model, best_model, best_metrics, best_hyperparameters, best_config = find_best_nn()
     # optimiser = model.optimizer
+    # torch.autograd.set_detect_anomaly(True)
     metrics = train(model, train_loader, validation_loader, num_epochs)
+    # torch.autograd.set_detect_anomaly(False)
     save_model(model, saved_configs, metrics, save_folder)
     print(f"Best Model Configuration: {best_config}")
     print(f"Best Metrics: {best_metrics}")
     print(f"Best Hyperparameters: {best_hyperparameters}")
+
+
 
 
 
