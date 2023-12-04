@@ -281,6 +281,52 @@ def train(model, train_loader, val_loader, num_epochs):
     return metrics
 
 
+
+
+def generate_nn_configs():
+    
+    optimisers = ['Adadelta', 'SGD', 'Adam', 'Adagrad']
+    all_params = []
+    
+    for optimiser in optimisers:
+        
+        if optimiser == 'Adadelta':
+            params = {'optimiser': ['Adadelta'], 'learning_rate': [1.0, 0.001, 0.0001], 'rho': [0.9, 0.7, 0.3], 'weight_decay': [0, 0.5, 1, 1.5], 'width': [5], 'depth': [5]}  
+       
+        elif optimiser == 'SGD':
+            params = {'optimiser': ['SGD'], 'learning_rate': [0.001, 0.0001], 'momentum': [0, 0.1, 0.3, 0.7], 'weight_decay': [0, 0.5, 1, 1.5], 'width': [5], 'depth': [5]}  
+        
+        elif optimiser == 'Adam':
+            params = {'optimiser': ['Adam'], 'learning_rate': [0.001, 0.0001], 'weight_decay': [0, 0.5, 1, 1.5], 'amsgrad': [True, False], 'width': [5], 'depth': [5]}  
+       
+        elif optimiser == 'Adagrad':
+            params = {'optimiser': ['Adagrad'], 'learning_rate': [0.01, 0.001, 0.0001], 'lr_decay': [0, 0.1, 0.3, 0.7], 'weight_decay': [0, 0.5, 1, 1.5], 'width': [5], 'depth': [5]}  
+        
+        keys, values = zip(*params.items())
+        params_dict = [dict(zip(keys, v)) for v in itertools.product(*values)]
+        all_params.append(params_dict)    
+    
+    return all_params
+
+
+
+def convert_all_params_to_yaml(all_params, yaml_file):
+    
+    with open(yaml_file, 'w') as f:
+        yaml.safe_dump(all_params, f, sort_keys=False, default_flow_style=False)
+
+
+
+def get_nn_config(yaml_file):
+
+    with open(yaml_file, 'r') as f:
+        config = yaml.safe_load(f)
+        
+        return config 
+
+
+
+
 num_epochs = 15
 
 
@@ -310,13 +356,14 @@ def find_best_nn():
     best_loss = 10000
     # bad_configs = []
 
+    configs = get_nn_config("nn_config.yaml")
     # configs = generate_nn_configs()
-    configs = {
-        'hidden_layer_width': 32,
-        'depth': 2,
-        'learning_rate': 0.001,
-        'optimiser': 'SGD'
-        }
+    # configs = {
+    #     'hidden_layer_width': 32,
+    #     'depth': 2,
+    #     'learning_rate': 0.001,
+    #     'optimiser': 'SGD'
+    #     }
 
 
     for i, config in enumerate(configs):
@@ -412,12 +459,17 @@ if __name__ == "__main__":
 
     # saved_configs = get_nn_config()
 
-    configs = {
-        'hidden_layer_width': 32,
-        'depth': 2,
-        'learning_rate': 0.001,
-        'optimiser': 'SGD'
-        }
+
+    all_params = generate_nn_configs()
+    convert_all_params_to_yaml(all_params, "nn_config.yaml")
+    configs = get_nn_config("nn_config.yaml")
+
+    # configs = {
+    #     'hidden_layer_width': 32,
+    #     'depth': 2,
+    #     'learning_rate': 0.001,
+    #     'optimiser': 'SGD'
+    #     }
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     save_folder = f"models/neural_networks/regression/{current_time}"
