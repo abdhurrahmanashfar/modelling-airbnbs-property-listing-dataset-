@@ -1,24 +1,792 @@
-- depth: 2
-  hidden_layer_width: 32
-  learning_rate: 0.001
-  optimizer: SGD
-- depth: 2
-  hidden_layer_width: 32
-  learning_rate: 0.001
-  optimizer: Adam
-- depth: 2
-  hidden_layer_width: 32
-  learning_rate: 0.01
-  optimizer: SGD
-- depth: 2
-  hidden_layer_width: 32
-  learning_rate: 0.01
-  optimizer: Adam
-- depth: 2
-  hidden_layer_width: 32
-  learning_rate: 0.1
-  optimizer: SGD
-- depth: 2
-  hidden_layer_width: 32
-  learning_rate: 0.1
-  optimizer: Adam
+- - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.9
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.9
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.9
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.9
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.7
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.7
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.7
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.7
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.3
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.3
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.3
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 1.0
+    rho: 0.3
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.9
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.9
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.9
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.9
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.7
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.7
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.7
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.7
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.3
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.3
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.3
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.001
+    rho: 0.3
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.9
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.9
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.9
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.9
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.7
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.7
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.7
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.7
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.3
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.3
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.3
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adadelta
+    learning_rate: 0.0001
+    rho: 0.3
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+- - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.1
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.1
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.1
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.1
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.3
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.3
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.3
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.3
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.7
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.7
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.7
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.001
+    momentum: 0.7
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.1
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.1
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.1
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.1
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.3
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.3
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.3
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.3
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.7
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.7
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.7
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: SGD
+    learning_rate: 0.0001
+    momentum: 0.7
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+- - optimiser: Adam
+    learning_rate: 0.001
+    weight_decay: 0
+    amsgrad: true
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.001
+    weight_decay: 0
+    amsgrad: false
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.001
+    weight_decay: 0.5
+    amsgrad: true
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.001
+    weight_decay: 0.5
+    amsgrad: false
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.001
+    weight_decay: 1
+    amsgrad: true
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.001
+    weight_decay: 1
+    amsgrad: false
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.001
+    weight_decay: 1.5
+    amsgrad: true
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.001
+    weight_decay: 1.5
+    amsgrad: false
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.0001
+    weight_decay: 0
+    amsgrad: true
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.0001
+    weight_decay: 0
+    amsgrad: false
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.0001
+    weight_decay: 0.5
+    amsgrad: true
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.0001
+    weight_decay: 0.5
+    amsgrad: false
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.0001
+    weight_decay: 1
+    amsgrad: true
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.0001
+    weight_decay: 1
+    amsgrad: false
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.0001
+    weight_decay: 1.5
+    amsgrad: true
+    width: 5
+    depth: 5
+  - optimiser: Adam
+    learning_rate: 0.0001
+    weight_decay: 1.5
+    amsgrad: false
+    width: 5
+    depth: 5
+- - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.1
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.1
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.1
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.1
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.3
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.3
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.3
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.3
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.7
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.7
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.7
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.01
+    lr_decay: 0.7
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.1
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.1
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.1
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.1
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.3
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.3
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.3
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.3
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.7
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.7
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.7
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.001
+    lr_decay: 0.7
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.1
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.1
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.1
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.1
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.3
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.3
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.3
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.3
+    weight_decay: 1.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.7
+    weight_decay: 0
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.7
+    weight_decay: 0.5
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.7
+    weight_decay: 1
+    width: 5
+    depth: 5
+  - optimiser: Adagrad
+    learning_rate: 0.0001
+    lr_decay: 0.7
+    weight_decay: 1.5
+    width: 5
+    depth: 5
