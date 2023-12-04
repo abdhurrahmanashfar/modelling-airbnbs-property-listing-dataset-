@@ -50,9 +50,10 @@ class AirbnbNightlyPriceRegressionDataset(Dataset):
 # features, label = load_airbnb(df, 'Price_Night')
 # del features["Unnamed: 0"]
 # dataset = AirbnbNightlyPriceRegressionDataset(features, label)
-original_df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData_2.csv")
-df['bedrooms'] = original_df['bedrooms']
-print(df.isnull().sum())
+# original_df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData_2.csv")
+# df['bedrooms'] = original_df['bedrooms']
+# df['guests'] = original_df['guests']
+# print(df.isnull().sum())
 
 
 def get_random_split(dataset):
@@ -82,16 +83,46 @@ class TabularNN(nn.Module):
         # self.fc2 = nn.Linear(configs['hidden_layer_width'], output_size)
         # self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
 
-        layers = []
-        layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
+        # layers = []
+        # layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
         # layers.append(nn.BatchNorm1d(input_size))
+        # layers.append(nn.ReLU())
+        # layers.append(nn.Linear(configs['hidden_layer_width'], configs['hidden_layer_width']))
+        # layers.append(nn.ReLU())
+        # layers.append(nn.Linear(configs['hidden_layer_width'], output_size))
+        # self.layers = nn.Sequential(*layers)
+        # # self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
+        # # self.optimiser = torch.optim.SGD(model.parameters(), configs['learning_rate'])
+        # self.optimiser = torch.optim.SGD(self.parameters(), configs['learning_rate'])
+
+        # layers = []
+        # layers.append(nn.Linear(input_size, configs['hidden_layer_width']))
+        # layers.append(nn.ReLU())
+        # layers.append(nn.BatchNorm1d(configs['hidden_layer_width']))
+        # layers.append(nn.Linear(configs['hidden_layer_width'], configs['hidden_layer_width']))
+        # layers.append(nn.ReLU())
+        # layers.append(nn.BatchNorm1d(configs['hidden_layer_width']))
+        # layers.append(nn.Linear(configs['hidden_layer_width'], output_size))
+        # self.layers = nn.Sequential(*layers)
+        # self.optimiser = torch.optim.SGD(self.parameters(), configs['learning_rate'])
+
+        layers = []
+        layers.append(nn.Linear(input_size, 32))
         layers.append(nn.ReLU())
-        layers.append(nn.Linear(configs['hidden_layer_width'], configs['hidden_layer_width']))
-        layers.append(nn.Linear(configs['hidden_layer_width'], output_size))
+        layers.append(nn.BatchNorm1d(32))
+        layers.append(nn.Linear(32, 32))
+        layers.append(nn.ReLU())
+        layers.append(nn.BatchNorm1d(32))
+        layers.append(nn.Linear(32, output_size))
         self.layers = nn.Sequential(*layers)
-        # self.optimizer = getattr(optim, configs['optimiser'])(self.parameters(), lr=configs['learning_rate'])
-        # self.optimiser = torch.optim.SGD(model.parameters(), configs['learning_rate'])
-        self.optimiser = torch.optim.SGD(self.parameters(), configs['learning_rate'])
+        self.optimiser = torch.optim.SGD(self.parameters(), 0.001)
+
+        # configs = {
+        # 'hidden_layer_width': 32,
+        # 'depth': 2,
+        # 'learning_rate': 0.001,
+        # 'optimiser': 'SGD'
+        # }
 
     def forward(self, x):
         # out = self.fc1(x)
@@ -99,7 +130,9 @@ class TabularNN(nn.Module):
         # out = self.fc2(out)
         # return out
         # return self.layers(features)
+        print(f"Input shape: {x.shape}")
         x = self.layers(x)
+        print(f"Shape after layer1: {x.shape}")
         return x
     
 
@@ -111,31 +144,31 @@ class TabularNN(nn.Module):
 # hidden_size = 64
 # output_size = 1
 
+# ....................
+# def generate_nn_configs():
+#     configs = []
 
-def generate_nn_configs():
-    configs = []
+#     hidden_layer_widths = [12, 32]
+#     depths = [1, 2]
+#     learning_rates = [0.001, 0.01]
+#     # optimisers = ['Adadelta', 'SGD', 'Adam', 'Adagrad']
+#     optimisers = ['SGD']
+#     # hidden_layer_widths = [32]
+#     # depths = [2]
+#     # learning_rates = [0.001, 0.01, 0.1]
+#     # optimisers = ['SGD', 'Adam']
 
-    hidden_layer_widths = [32, 64, 128]
-    depths = [2, 3, 4]
-    learning_rates = [0.001, 0.01, 0.1]
-    # optimisers = ['Adadelta', 'SGD', 'Adam', 'Adagrad']
-    optimisers = ['SGD']
-    # hidden_layer_widths = [32]
-    # depths = [2]
-    # learning_rates = [0.001, 0.01, 0.1]
-    # optimisers = ['SGD', 'Adam']
+#     for config in itertools.product(hidden_layer_widths, depths, learning_rates, optimisers):
+#         print(config)
+#         config_dict = {
+#             'hidden_layer_width': config[0],
+#             'depth': config[1],
+#             'learning_rate': config[2],
+#             'optimiser': config[3]
+#         }
+#         configs.append(config_dict)
 
-    for config in itertools.product(hidden_layer_widths, depths, learning_rates, optimisers):
-        print(config)
-        config_dict = {
-            'hidden_layer_width': config[0],
-            'depth': config[1],
-            'learning_rate': config[2],
-            'optimiser': config[3]
-        }
-        configs.append(config_dict)
-
-    return configs
+#     return configs
 
 
 # configs = generate_nn_configs()
@@ -145,11 +178,11 @@ def generate_nn_configs():
 # with open('nn_config.yaml', 'w') as file:
 #     yaml.dump(configs, file)
 
-
-def get_nn_config():
-    with open('nn_config.yaml', 'r') as file:
-        configs = yaml.safe_load(file)
-    return configs
+# ..................
+# def get_nn_config():
+#     with open('nn_config.yaml', 'r') as file:
+#         configs = yaml.safe_load(file)
+#     return configs
 
 # saved_configs = get_nn_config()
 
@@ -159,7 +192,8 @@ def train(model, train_loader, val_loader, num_epochs):
     batch_idx = 0
     pred_time = []
     start_time = time.time()
-    optimiser = model.optimiser
+    # optimiser = model.optimiser
+    optimiser = optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.MSELoss()
     writer = SummaryWriter()
 
@@ -180,6 +214,7 @@ def train(model, train_loader, val_loader, num_epochs):
             time_elapsed = time_after_pred - time_b4_pred
             pred_time.append(time_elapsed)
             print(prediction.shape)
+            label = torch.unsqueeze(label, 1)
             loss = criterion(prediction, label)
             # prediction[torch.isnan(prediction)] = 1  # Replace NaN values with 1
             # label[torch.isnan(label)] = 1  # Replace NaN values with 1
@@ -273,8 +308,16 @@ def find_best_nn():
     best_hyperparameters = None
     best_config = None
     best_loss = 10000
+    # bad_configs = []
 
-    configs = generate_nn_configs()
+    # configs = generate_nn_configs()
+    configs = {
+        'hidden_layer_width': 32,
+        'depth': 2,
+        'learning_rate': 0.001,
+        'optimiser': 'SGD'
+        }
+
 
     for i, config in enumerate(configs):
         print(f"Training Model {i+1}...")
@@ -283,6 +326,7 @@ def find_best_nn():
         # try:
         metrics = train(model, train_loader, validation_loader, num_epochs)
         # except:
+        #     bad_configs.append(config)
         #     print(config)
         #     break
 
@@ -296,8 +340,31 @@ def find_best_nn():
         # save_config(config, f'model_{i+1}')
     print(type(best_metrics))
     save_model(best_model, best_hyperparameters, best_metrics, save_best_model_folder)
+    # print(bad_configs)
 
     return model, best_model, best_metrics, best_hyperparameters, best_config
+
+# Sample function to train a model with a given configuration
+def train_model(config):
+    # Create and train the model using the provided configuration
+    model = TabularNN(input_size, hidden_size, output_size, config)
+    train_set, validation_set, test_set = get_random_split(dataset)
+    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
+    validation_loader = DataLoader(validation_set, batch_size=batch_size, shuffle=False)
+    metrics = train(model, train_loader, validation_loader, num_epochs)
+    return metrics
+
+# # List of configurations
+# configs = generate_nn_configs()
+
+# # Test each configuration individually
+# for i, config in enumerate(configs):
+#     print(f"Testing Configuration {i + 1}")
+#     metrics = train_model(config)
+#     print(f"Metrics for Configuration {i + 1}: {metrics}")
+#     print("---------------")
+
+
 
 
 if __name__ == "__main__":
@@ -313,8 +380,19 @@ if __name__ == "__main__":
     del features["Unnamed: 0"]
     dataset = AirbnbNightlyPriceRegressionDataset(features, label)
 
-    # print(features.isnull().sum())
-    # print(label.isnull().sum())
+    original_df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData_2.csv")
+    df['bedrooms'] = original_df['bedrooms']
+    df['guests'] = original_df['guests']
+    df.drop(df.columns[0], axis=1, inplace=True)
+    df.replace(0.0, 1, inplace=True)
+    df.fillna(1, inplace=True)
+    df.dropna(axis=0, inplace=True)
+    print(df.isnull().sum())
+    nan_labels = df['Price_Night'].isnull().sum()
+    print(nan_labels)
+
+    print(features.isnull().sum())
+    print(label.isnull().sum())
 
     train_set, validation_set, test_set = get_random_split(dataset)
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
@@ -323,15 +401,23 @@ if __name__ == "__main__":
     # data_loader = {"train": train_loader, "validation": validation_loader, "test": test_loader}
 
     input_size = 10
+    # input_size = df.shape[1]
     hidden_size = 64
     output_size = 1
 
-    configs = generate_nn_configs()
+    # configs = generate_nn_configs()
 
-    with open('nn_config.yaml', 'w') as file:
-        yaml.dump(configs, file)
+    # with open('nn_config.yaml', 'w') as file:
+    #     yaml.dump(configs, file)
 
-    saved_configs = get_nn_config()
+    # saved_configs = get_nn_config()
+
+    configs = {
+        'hidden_layer_width': 32,
+        'depth': 2,
+        'learning_rate': 0.001,
+        'optimiser': 'SGD'
+        }
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     save_folder = f"models/neural_networks/regression/{current_time}"
@@ -339,14 +425,29 @@ if __name__ == "__main__":
     save_best_model_folder = "models/neural_networks/regression/best_model"
 
     model, best_model, best_metrics, best_hyperparameters, best_config = find_best_nn()
+    # configs = find_best_nn()
+    # print(configs)
     # optimiser = model.optimizer
     # torch.autograd.set_detect_anomaly(True)
     metrics = train(model, train_loader, validation_loader, num_epochs)
     # torch.autograd.set_detect_anomaly(False)
-    save_model(model, saved_configs, metrics, save_folder)
+    # save_model(model, saved_configs, metrics, save_folder)
+    save_model(model, configs, metrics, save_folder)
     print(f"Best Model Configuration: {best_config}")
     print(f"Best Metrics: {best_metrics}")
     print(f"Best Hyperparameters: {best_hyperparameters}")
+
+    # # List of configurations
+    # configs = generate_nn_configs()
+
+    # # Test each configuration individually
+    # for i, config in enumerate(configs):
+    #     print(f"Testing Configuration {i + 1}")
+    #     metrics = train_model(config)
+    #     print(f"Metrics for Configuration {i + 1}: {metrics}")
+    #     print("---------------")
+
+    
 
 
 
