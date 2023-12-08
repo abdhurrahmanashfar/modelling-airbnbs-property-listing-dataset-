@@ -17,10 +17,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 from tabular_df import load_airbnb
 from sklearn.preprocessing import StandardScaler
+from collections import OrderedDict
 
 np.random.seed(42)
 torch.manual_seed(2)
-df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData.csv")
+df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData_3.csv")
+
 
 class AirbnbNightlyPriceRegressionDataset(Dataset):
     def __init__(self, features, label):
@@ -106,6 +108,38 @@ class TabularNN(nn.Module):
         # self.layers = nn.Sequential(*layers)
         # self.optimiser = torch.optim.SGD(self.parameters(), configs['learning_rate'])
 
+        # layers = []
+        # layers.append(nn.Linear(input_size, configs['width']))
+        # layers.append(nn.ReLU())
+        # layers.append(nn.BatchNorm1d(configs['width']))
+        # layers.append(nn.Linear(configs['width'], configs['width']))
+        # layers.append(nn.ReLU())
+        # layers.append(nn.BatchNorm1d(configs['width']))
+        # layers.append(nn.Linear(configs['width'], output_size))
+        # self.layers = nn.Sequential(*layers)
+        # self.optimiser = torch.optim.SGD(self.parameters(), configs['learning_rate'])
+
+
+    # default_hyperparams = {"optimiser": "Adam", "learning_rate": 0.001, "width":32, "depth":5}
+
+    # def __init__(self, hyperparams_dict=default_hyperparams):
+    #     super(TabularNN, self).__init__()
+
+    #     width, depth = hyperparams_dict["width"], hyperparams_dict["depth"]
+    #     n_hidden = (depth - 2)
+
+    #     self.layers = torch.nn.Sequential(
+    #         torch.nn.Linear(11, width), 
+    #         *(torch.nn.ReLU(), torch.nn.Linear(width, width))*(n_hidden//2), 
+    #         *(torch.nn.ReLU(),)*(n_hidden%2), 
+    #         torch.nn.Linear(width, 1)
+    #         )
+
+    #     self.lr = hyperparams_dict["learning_rate"]            
+    #     self.optimiser = eval(f'torch.optim.{hyperparams_dict["optimiser"]}')
+
+
+
         layers = []
         layers.append(nn.Linear(input_size, 32))
         layers.append(nn.ReLU())
@@ -130,9 +164,9 @@ class TabularNN(nn.Module):
         # out = self.fc2(out)
         # return out
         # return self.layers(features)
-        print(f"Input shape: {x.shape}")
+        # print(f"Input shape: {x.shape}")
         x = self.layers(x)
-        print(f"Shape after layer1: {x.shape}")
+        # print(f"Shape after layer1: {x.shape}")
         return x
     
 
@@ -192,8 +226,8 @@ def train(model, train_loader, val_loader, num_epochs):
     batch_idx = 0
     pred_time = []
     start_time = time.time()
-    # optimiser = model.optimiser
-    optimiser = optim.Adam(model.parameters(), lr=0.001)
+    optimiser = model.optimiser
+    # optimiser = optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.MSELoss()
     writer = SummaryWriter()
 
@@ -369,6 +403,7 @@ def find_best_nn():
     for i, config in enumerate(configs):
         print(f"Training Model {i+1}...")
         model = TabularNN(input_size, hidden_size, output_size, config)
+        # model = TabularNN()
         
         # try:
         metrics = train(model, train_loader, validation_loader, num_epochs)
@@ -392,14 +427,14 @@ def find_best_nn():
     return model, best_model, best_metrics, best_hyperparameters, best_config
 
 # Sample function to train a model with a given configuration
-def train_model(config):
-    # Create and train the model using the provided configuration
-    model = TabularNN(input_size, hidden_size, output_size, config)
-    train_set, validation_set, test_set = get_random_split(dataset)
-    train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
-    validation_loader = DataLoader(validation_set, batch_size=batch_size, shuffle=False)
-    metrics = train(model, train_loader, validation_loader, num_epochs)
-    return metrics
+# def train_model(config):
+#     # Create and train the model using the provided configuration
+#     model = TabularNN(input_size, hidden_size, output_size, config)
+#     train_set, validation_set, test_set = get_random_split(dataset)
+#     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
+#     validation_loader = DataLoader(validation_set, batch_size=batch_size, shuffle=False)
+#     metrics = train(model, train_loader, validation_loader, num_epochs)
+#     return metrics
 
 # # List of configurations
 # configs = generate_nn_configs()
@@ -423,23 +458,29 @@ if __name__ == "__main__":
     # print(f"Best Metrics: {best_metrics}")
     # print(f"Best Hyperparameters: {best_hyperparameters}")
 
+    # df = pd.read_csv(your path)
     features, label = load_airbnb(df, 'Price_Night')
     del features["Unnamed: 0"]
+    features = features.select_dtypes(include=["int64", "float64"])
+
+    # features, label = load_airbnb(df, 'Price_Night')
+    # del features["Unnamed: 0"]
     dataset = AirbnbNightlyPriceRegressionDataset(features, label)
 
-    original_df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData_2.csv")
-    df['bedrooms'] = original_df['bedrooms']
-    df['guests'] = original_df['guests']
-    df.drop(df.columns[0], axis=1, inplace=True)
-    df.replace(0.0, 1, inplace=True)
-    df.fillna(1, inplace=True)
-    df.dropna(axis=0, inplace=True)
-    print(df.isnull().sum())
-    nan_labels = df['Price_Night'].isnull().sum()
-    print(nan_labels)
+    # original_df = pd.read_csv("D:/AiCore/Projects/AirBnb/airbnb-property-listings/tabular_data/Cleaned_AirBnbData_2.csv")
+    # df['bedrooms'] = original_df['bedrooms']
+    # df['guests'] = original_df['guests']
+    # df.drop(df.columns[0], axis=1, inplace=True)
+    # df.replace(0.0, 1, inplace=True)
+    # df.fillna(1, inplace=True)
+    # df.dropna(axis=0, inplace=True)
+    # print(df.isnull().sum())
+    # nan_labels = df['Price_Night'].isnull().sum()
+    # print(nan_labels)
 
-    print(features.isnull().sum())
-    print(label.isnull().sum())
+    # print(features.isnull().sum())
+    # print(features.isnull().sum())
+    # print(label.isnull().sum())
 
     train_set, validation_set, test_set = get_random_split(dataset)
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
@@ -447,7 +488,7 @@ if __name__ == "__main__":
     test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
     # data_loader = {"train": train_loader, "validation": validation_loader, "test": test_loader}
 
-    input_size = 10
+    input_size = 11
     # input_size = df.shape[1]
     hidden_size = 64
     output_size = 1
