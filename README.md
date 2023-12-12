@@ -13,3 +13,6 @@ This script functions similiarly to the regression version, but this time the ma
 
 ## Milestone 6
 This script performs a grid-search to tune the hyperparameters of a neural-network created with PyTorch. The hyperparameters include the width and depth of the neural-network. The grid-search takes in the hyperparameters to test from a YAML file.
+
+## Milestone 7
+This script aims to demonstrate the robustness of the pipeline by repeating the task but with the goal of predicting the number of bedrooms in the AirBnB.
